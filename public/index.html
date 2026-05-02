@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#000000"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>MY NUGO — Espace CEO</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --black:#000000;--white:#FFFFFF;
+  --g100:#F7F6F2;--g200:#EEECEC;--g300:#CCCCCC;
+  --g400:#999999;--g500:#666666;--g700:#333333;--g800:#1A1A1A;
+  --green:#1E6B45;--green-bg:#E8F5EE;
+  --orange:#C85A00;--orange-bg:#FFF0E6;
+  --red:#B02020;--red-bg:#FDEAEA;
+  --blue:#1A3A6B;--blue-bg:#E8EEF8;
+  --fs:'Cormorant Garamond',serif;
+  --fb:'Montserrat',sans-serif;
+  --safe-top:env(safe-area-inset-top,44px);
+  --safe-bot:env(safe-area-inset-bottom,34px);
+}
+html{background:var(--black);}
+body{font-family:var(--fb);background:var(--g100);color:var(--black);min-height:100vh;overflow-x:hidden;}
+
+/* ══ LOGIN ══ */
+.login{position:fixed;inset:0;background:var(--black);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;padding-top:calc(var(--safe-top) + 40px);}
+.login.out{animation:fadeOut .5s ease forwards;}
+@keyframes fadeOut{to{opacity:0;transform:scale(1.03);pointer-events:none;}}
+.login-logo{font-family:var(--fs);font-size:56px;font-style:italic;font-weight:300;color:var(--white);letter-spacing:-2px;margin-bottom:6px;text-align:center;}
+.login-tag{font-size:8px;letter-spacing:6px;text-transform:uppercase;color:var(--g500);margin-bottom:56px;text-align:center;}
+.login-card{width:100%;max-width:340px;}
+.login-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);display:block;margin-bottom:10px;}
+.login-input{width:100%;background:#111;border:1px solid #222;color:var(--white);padding:18px;font-size:18px;font-family:var(--fb);outline:none;letter-spacing:4px;border-radius:12px;text-align:center;margin-bottom:14px;transition:border .2s;}
+.login-input:focus{border-color:#555;}
+.login-btn{width:100%;background:var(--white);color:var(--black);border:none;padding:18px;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:700;font-family:var(--fb);cursor:pointer;border-radius:12px;}
+.login-btn:active{opacity:.85;}
+.login-err{font-size:10px;color:#ff6060;text-align:center;margin-top:10px;display:none;}
+
+/* ══ LOADING ══ */
+.loading{position:fixed;inset:0;background:var(--black);z-index:90;display:none;flex-direction:column;align-items:center;justify-content:center;}
+.loading.show{display:flex;}
+.loading.out{animation:fadeOut .3s forwards;}
+.ld-logo{font-family:var(--fs);font-size:42px;font-style:italic;color:var(--white);margin-bottom:8px;}
+.ld-sub{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--g500);margin-bottom:36px;}
+.ld-dots{display:flex;gap:8px;}
+.ld-dot{width:7px;height:7px;border-radius:50%;background:#222;animation:dot 1.4s ease infinite;}
+.ld-dot:nth-child(2){animation-delay:.25s;}
+.ld-dot:nth-child(3){animation-delay:.5s;}
+@keyframes dot{0%,80%,100%{background:#222;}40%{background:var(--white);}}
+
+/* ══ HEADER ══ */
+.hdr{background:var(--black);padding:calc(var(--safe-top) + 12px) 20px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;}
+.hdr-brand{font-family:var(--fs);font-size:26px;font-style:italic;color:var(--white);letter-spacing:-1px;}
+.hdr-sub{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);margin-top:1px;}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.hdr-time{font-size:8px;color:var(--g500);letter-spacing:1px;}
+.hdr-refresh{width:36px;height:36px;background:#111;border:none;border-radius:50%;color:var(--g400);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.hdr-refresh:active{background:#222;color:var(--white);transform:rotate(180deg);}
+.hdr-refresh.spin{animation:spinR .6s linear;}
+@keyframes spinR{to{transform:rotate(360deg);}}
+
+/* ══ BOTTOM NAV ══ */
+.bot-nav{position:fixed;bottom:0;left:0;right:0;background:var(--black);border-top:1px solid #111;display:flex;padding-bottom:var(--safe-bot);z-index:30;}
+.bot-tab{flex:1;display:flex;flex-direction:column;align-items:center;padding:12px 4px 8px;cursor:pointer;gap:4px;transition:all .2s;}
+.bot-tab-icon{font-size:22px;line-height:1;}
+.bot-tab-label{font-size:7px;letter-spacing:1px;text-transform:uppercase;color:var(--g500);font-weight:500;transition:color .2s;}
+.bot-tab.active .bot-tab-label{color:var(--white);}
+.bot-tab.active .bot-tab-icon{filter:brightness(2);}
+
+/* ══ PAGES ══ */
+.page{display:none;padding:20px 16px;padding-bottom:calc(var(--safe-bot) + 90px);}
+.page.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ SECTION ══ */
+.sec-title{font-family:var(--fs);font-size:38px;font-style:italic;font-weight:300;letter-spacing:-1px;line-height:1;margin-bottom:4px;}
+.sec-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);margin-bottom:24px;}
+
+/* ══ HERO KPI ══ */
+.hero-kpi{background:var(--black);border-radius:20px;padding:28px 24px;margin-bottom:16px;position:relative;overflow:hidden;}
+.hero-kpi::after{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.03) 0%,transparent 70%);}
+.hk-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);margin-bottom:10px;}
+.hk-value{font-family:var(--fs);font-size:64px;font-weight:300;color:var(--white);line-height:1;letter-spacing:-3px;}
+.hk-unit{font-size:16px;color:var(--g500);margin-left:6px;font-family:var(--fb);font-weight:300;}
+.hk-row{display:flex;gap:0;margin-top:24px;padding-top:20px;border-top:1px solid #1a1a1a;}
+.hk-stat{flex:1;padding:0 4px;}
+.hk-stat-val{font-family:var(--fs);font-size:28px;color:var(--white);line-height:1;}
+.hk-stat-lbl{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--g500);margin-top:4px;}
+
+/* Objectif progress */
+.obj-bar-wrap{margin-top:18px;padding-top:18px;border-top:1px solid #1a1a1a;}
+.obj-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.obj-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--g500);}
+.obj-pct{font-family:var(--fs);font-size:22px;color:var(--white);}
+.obj-bar-bg{height:3px;background:#1a1a1a;border-radius:2px;overflow:hidden;}
+.obj-bar-fill{height:100%;background:var(--white);border-radius:2px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1);}
+
+/* ══ KPI GRID ══ */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.kpi{background:var(--white);border-radius:14px;padding:18px 16px;border:1px solid var(--g200);position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;}
+.kpi.good::after{background:var(--green);}
+.kpi.warn::after{background:var(--orange);}
+.kpi.danger::after{background:var(--red);}
+.kpi.info::after{background:var(--blue);}
+.kpi-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--g400);margin-bottom:10px;display:block;}
+.kpi-value{font-family:var(--fs);font-size:36px;font-weight:300;line-height:1;color:var(--black);}
+.kpi-sub{font-size:9px;color:var(--g400);margin-top:5px;}
+
+/* ══ ALERT ══ */
+.alert{border-radius:12px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:12px;}
+.alert.warn{background:var(--orange-bg);border:1px solid rgba(200,90,0,.15);}
+.alert.danger{background:var(--red-bg);border:1px solid rgba(176,32,32,.15);}
+.alert.good{background:var(--green-bg);border:1px solid rgba(30,107,69,.15);}
+.alert-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.alert-text{font-size:13px;color:var(--black);line-height:1.6;font-weight:500;}
+.alert-sub{font-size:11px;color:var(--g500);margin-top:3px;}
+
+/* ══ GRAPHIQUE ══ */
+.chart-card{background:var(--white);border-radius:16px;padding:22px 18px;margin-bottom:16px;border:1px solid var(--g200);}
+.chart-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);margin-bottom:20px;}
+.bar-chart{display:flex;align-items:flex-end;gap:12px;height:120px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bar-val{font-family:var(--fs);font-size:13px;color:var(--black);text-align:center;line-height:1.3;min-height:32px;display:flex;align-items:flex-end;}
+.bar{width:100%;border-radius:6px 6px 0 0;transition:height 1s cubic-bezier(.34,1.56,.64,1);min-height:4px;background:var(--black);}
+.bar.future{background:var(--g200);}
+.bar.target{background:repeating-linear-gradient(45deg,var(--g300),var(--g300) 2px,transparent 2px,transparent 6px);}
+.bar-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--g400);}
+.bar-evo{font-size:9px;font-weight:700;}
+.bar-evo.up{color:var(--green);}
+.bar-evo.down{color:var(--red);}
+
+/* ══ PROGRESS ══ */
+.prog-card{background:var(--white);border-radius:16px;padding:22px 18px;margin-bottom:16px;border:1px solid var(--g200);}
+.prog-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g400);margin-bottom:18px;}
+.prog-item{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.prog-item:last-child{margin-bottom:0;}
+.prog-rank{font-family:var(--fs);font-size:18px;color:var(--g300);width:20px;text-align:center;flex-shrink:0;}
+.prog-name{font-size:11px;color:var(--black);font-weight:500;width:90px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.prog-bar-bg{flex:1;height:5px;background:var(--g100);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1);}
+.prog-fill.r1{background:var(--black);}
+.prog-fill.r2{background:var(--g500);}
+.prog-fill.rn{background:var(--g300);}
+.prog-val{font-family:var(--fs);font-size:16px;color:var(--black);width:72px;text-align:right;flex-shrink:0;}
+
+/* ══ TABLE ══ */
+.tbl-card{background:var(--white);border-radius:16px;overflow:hidden;margin-bottom:16px;border:1px solid var(--g200);}
+.tbl-hd{background:var(--black);padding:14px 18px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--white);}
+.tbl-row{display:flex;padding:14px 18px;border-bottom:1px solid var(--g100);align-items:center;gap:10px;}
+.tbl-row:last-child{border-bottom:none;}
+.tbl-row:active{background:var(--g100);}
+.tc{font-size:12px;color:var(--black);}
+.tc.muted{color:var(--g400);font-size:10px;}
+.tc.money{font-family:var(--fs);font-size:20px;}
+.tc.red{color:var(--red);font-weight:600;}
+.tc.green{color:var(--green);font-weight:600;}
+.tc.bold{font-weight:700;}
+.tc.small{font-size:10px;color:var(--g400);letter-spacing:1px;}
+
+/* ══ BADGE ══ */
+.badge{font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:5px 11px;border-radius:20px;font-weight:600;flex-shrink:0;}
+.badge.dispo{background:var(--green-bg);color:var(--green);}
+.badge.faible{background:var(--orange-bg);color:var(--orange);}
+.badge.rupture{background:var(--red-bg);color:var(--red);animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+
+/* ══ MOIS CARDS ══ */
+.mois-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.mois-card{background:var(--white);border-radius:14px;padding:16px 12px;border:1px solid var(--g200);text-align:center;}
+.mois-name{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--g400);margin-bottom:8px;}
+.mois-val{font-family:var(--fs);font-size:24px;font-weight:300;line-height:1;}
+.mois-evo{font-size:10px;font-weight:700;margin-top:5px;}
+.mois-evo.up{color:var(--green);}
+.mois-evo.dn{color:var(--red);}
+
+/* ══ PANIER ══ */
+.panier-card{background:var(--black);border-radius:16px;padding:22px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.pc-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);margin-bottom:4px;}
+.pc-sub{font-size:10px;color:var(--g600);}
+.pc-val{font-family:var(--fs);font-size:42px;font-weight:300;color:var(--white);text-align:right;}
+.pc-unit{font-size:12px;color:var(--g500);margin-top:3px;text-align:right;}
+
+/* ══ DETTE HERO ══ */
+.dette-hero{background:#0a0000;border-radius:20px;padding:28px 24px;margin-bottom:16px;}
+.dh-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#884444;margin-bottom:10px;}
+.dh-value{font-family:var(--fs);font-size:56px;font-weight:300;color:#ff7070;line-height:1;letter-spacing:-2px;}
+.dh-unit{font-size:14px;color:#884444;margin-left:4px;}
+.dh-row{display:flex;gap:0;margin-top:20px;padding-top:18px;border-top:1px solid #1a0808;}
+.dh-stat{flex:1;}
+.dh-stat-val{font-family:var(--fs);font-size:26px;color:#ff9999;line-height:1;}
+.dh-stat-lbl{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:#884444;margin-top:4px;}
+
+/* ══ MAC CHATBOT ══ */
+.mac-btn{position:fixed;bottom:calc(var(--safe-bot) + 76px);right:18px;width:58px;height:58px;background:var(--black);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;z-index:40;box-shadow:0 4px 20px rgba(0,0,0,.4);border:2px solid var(--g700);transition:all .3s;}
+.mac-btn:active{transform:scale(.94);}
+.mac-btn-icon{font-size:24px;line-height:1;}
+.mac-btn-label{font-size:6px;letter-spacing:1px;text-transform:uppercase;color:var(--g500);margin-top:2px;}
+.mac-notif{position:absolute;top:-2px;right:-2px;width:16px;height:16px;background:var(--red);border-radius:50%;border:2px solid var(--black);display:none;align-items:center;justify-content:center;}
+.mac-notif.show{display:flex;}
+.mac-notif-n{font-size:8px;color:var(--white);font-weight:700;}
+
+.mac-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;display:none;backdrop-filter:blur(4px);}
+.mac-overlay.show{display:block;}
+
+.mac-panel{position:fixed;bottom:0;left:0;right:0;height:92vh;background:var(--black);border-radius:24px 24px 0 0;z-index:51;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.46,.45,.94);}
+.mac-panel.show{transform:translateY(0);}
+
+.mac-hdr{padding:20px 20px 16px;border-bottom:1px solid #111;flex-shrink:0;}
+.mac-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.mac-close{width:32px;height:32px;background:#111;border:none;border-radius:50%;color:var(--g400);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.mac-name{font-family:var(--fs);font-size:28px;font-style:italic;color:var(--white);}
+.mac-status{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--g500);}
+.mac-status-dot{display:inline-block;width:6px;height:6px;background:#2ecc71;border-radius:50%;margin-right:6px;animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.mac-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.mac-chips::-webkit-scrollbar{display:none;}
+.mac-chip{font-size:10px;color:var(--g300);border:1px solid var(--g700);padding:8px 14px;border-radius:20px;white-space:nowrap;cursor:pointer;flex-shrink:0;transition:all .2s;font-family:var(--fb);}
+.mac-chip:active{background:var(--g700);color:var(--white);}
+
+.mac-messages{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none;}
+.mac-messages::-webkit-scrollbar{display:none;}
+
+.mac-msg{max-width:88%;animation:msgIn .3s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.mac-msg.mac{align-self:flex-start;}
+.mac-msg.user{align-self:flex-end;}
+
+.mac-bubble{padding:14px 16px;border-radius:18px;line-height:1.7;font-size:14px;}
+.mac-msg.mac .mac-bubble{background:#111;color:var(--white);border-bottom-left-radius:4px;}
+.mac-msg.user .mac-bubble{background:var(--white);color:var(--black);border-bottom-right-radius:4px;font-weight:500;}
+
+.mac-time{font-size:9px;color:var(--g700);margin-top:4px;padding:0 4px;}
+.mac-msg.user .mac-time{text-align:right;}
+
+.mac-typing{align-self:flex-start;}
+.mac-typing .mac-bubble{background:#111;padding:14px 18px;}
+.mac-typing-dots{display:flex;gap:4px;align-items:center;}
+.mac-typing-dot{width:6px;height:6px;border-radius:50%;background:var(--g500);animation:dot 1.2s ease infinite;}
+.mac-typing-dot:nth-child(2){animation-delay:.2s;}
+.mac-typing-dot:nth-child(3){animation-delay:.4s;}
+
+.mac-input-wrap{padding:12px 16px;padding-bottom:calc(var(--safe-bot) + 12px);border-top:1px solid #111;display:flex;gap:10px;flex-shrink:0;}
+.mac-input{flex:1;background:#111;border:1px solid #222;color:var(--white);padding:14px 16px;font-size:15px;font-family:var(--fb);outline:none;border-radius:24px;}
+.mac-input::placeholder{color:var(--g700);}
+.mac-send{width:46px;height:46px;background:var(--white);border:none;border-radius:50%;color:var(--black);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.mac-send:active{background:var(--g200);}
+
+/* ══ BACK TOP ══ */
+.back-top{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:18px;background:var(--black);color:var(--white);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;z-index:20;opacity:0;transition:opacity .3s;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.back-top.vis{opacity:1;}
+
+/* ══ DESKTOP ══ */
+@media(min-width:768px){
+  .page{padding:32px 40px;}
+  .hdr{padding:16px 40px;}
+  .kpi-grid{grid-template-columns:repeat(4,1fr);}
+  .hk-value{font-size:72px;}
+  .mac-panel{max-width:480px;left:auto;border-radius:24px 24px 0 0;}
+  .mac-btn{right:40px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login" id="loginScreen">
+  <div class="login-logo">My Nugo</div>
+  <div class="login-tag">Espace CEO · Réservé à Manou</div>
+  <div class="login-card">
+    <label class="login-label">Mot de passe</label>
+    <input class="login-input" type="password" id="pwdInput" placeholder="••••••" onkeydown="if(event.key==='Enter')login()"/>
+    <button class="login-btn" onclick="login()">Accéder →</button>
+    <p class="login-err" id="loginErr">Mot de passe incorrect. Réessayez.</p>
+  </div>
+</div>
+
+<!-- ══ LOADING ══ -->
+<div class="loading" id="loadingScreen">
+  <div class="ld-logo">My Nugo</div>
+  <div class="ld-sub">MAC prépare votre espace</div>
+  <div class="ld-dots"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<div class="hdr">
+  <div>
+    <div class="hdr-brand">My Nugo</div>
+    <div class="hdr-sub">Espace CEO · Privé</div>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-time" id="hdrTime">—</div>
+    <button class="hdr-refresh" id="refreshBtn" onclick="loadData()">↻</button>
+  </div>
+</div>
+
+<!-- ══ PAGE : VUE GÉNÉRALE ══ -->
+<div class="page active" id="page-home">
+  <h2 class="sec-title">Bonjour, Manou ✨</h2>
+  <p class="sec-sub" id="dateSub">—</p>
+
+  <div id="alertsZone"></div>
+
+  <!-- Hero CA -->
+  <div class="hero-kpi">
+    <div class="hk-label">CA Total Q1 2026</div>
+    <div>
+      <span class="hk-value" id="hk-ca">—</span>
+      <span class="hk-unit">FCFA</span>
+    </div>
+    <div class="hk-row">
+      <div class="hk-stat">
+        <div class="hk-stat-val" id="hk-nb">—</div>
+        <div class="hk-stat-lbl">Transactions</div>
+      </div>
+      <div class="hk-stat">
+        <div class="hk-stat-val" id="hk-panier">—</div>
+        <div class="hk-stat-lbl">Panier moyen</div>
+      </div>
+      <div class="hk-stat">
+        <div class="hk-stat-val" id="hk-clientes">—</div>
+        <div class="hk-stat-lbl">Clientes actives</div>
+      </div>
+    </div>
+    <!-- Objectif 10M FCFA/mois annuel -->
+    <div class="obj-bar-wrap">
+      <div class="obj-row">
+        <span class="obj-label">Objectif annuel — 120M FCFA</span>
+        <span class="obj-pct" id="obj-pct">—</span>
+      </div>
+      <div class="obj-bar-bg"><div class="obj-bar-fill" id="obj-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- KPIs secondaires -->
+  <div class="kpi-grid">
+    <div class="kpi warn">
+      <span class="kpi-label">Stock faible</span>
+      <div class="kpi-value" id="g-stock-alert">—</div>
+      <div class="kpi-sub">pièces ≤ 2</div>
+    </div>
+    <div class="kpi danger">
+      <span class="kpi-label">Dettes clientes</span>
+      <div class="kpi-value" id="g-dettes-k">—</div>
+      <div class="kpi-sub">FCFA à recouvrer</div>
+    </div>
+    <div class="kpi good">
+      <span class="kpi-label">Stock dispo</span>
+      <div class="kpi-value" id="g-stock-dispo">—</div>
+      <div class="kpi-sub">pièces OK</div>
+    </div>
+    <div class="kpi info">
+      <span class="kpi-label">Base clientes</span>
+      <div class="kpi-value" id="g-nb-cli">—</div>
+      <div class="kpi-sub">enregistrées</div>
+    </div>
+  </div>
+
+  <!-- Graphique CA -->
+  <div class="chart-card">
+    <div class="chart-title">Évolution CA — FCFA</div>
+    <div class="bar-chart">
+      <div class="bar-col">
+        <div class="bar-val" id="bv-jan">—</div>
+        <div class="bar" id="b-jan"></div>
+        <div class="bar-lbl">Jan</div>
+        <div class="bar-evo" id="be-jan"></div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val" id="bv-fev">—</div>
+        <div class="bar" id="b-fev"></div>
+        <div class="bar-lbl">Fév</div>
+        <div class="bar-evo" id="be-fev"></div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val" id="bv-mar">—</div>
+        <div class="bar" id="b-mar"></div>
+        <div class="bar-lbl">Mar</div>
+        <div class="bar-evo" id="be-mar"></div>
+      </div>
+      <div class="bar-col">
+        <div class="bar-val" style="color:var(--g300)">—</div>
+        <div class="bar future"></div>
+        <div class="bar-lbl" style="color:var(--g400)">Avr</div>
+        <div class="bar-evo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top clientes -->
+  <div class="prog-card">
+    <div class="prog-title">Top clientes Q1 — FCFA cumulé</div>
+    <div id="topClients">—</div>
+  </div>
+</div>
+
+<!-- ══ PAGE : VENTES ══ -->
+<div class="page" id="page-ventes">
+  <h2 class="sec-title">Ventes</h2>
+  <p class="sec-sub">Historique Q1 2026</p>
+
+  <div class="mois-grid">
+    <div class="mois-card">
+      <div class="mois-name">Janvier</div>
+      <div class="mois-val" id="v-jan">—</div>
+      <div class="mois-evo" id="v-jan-e">Base</div>
+    </div>
+    <div class="mois-card">
+      <div class="mois-name">Février</div>
+      <div class="mois-val" id="v-fev">—</div>
+      <div class="mois-evo" id="v-fev-e">—</div>
+    </div>
+    <div class="mois-card">
+      <div class="mois-name">Mars</div>
+      <div class="mois-val" id="v-mar">—</div>
+      <div class="mois-evo" id="v-mar-e">—</div>
+    </div>
+  </div>
+
+  <div class="panier-card">
+    <div>
+      <div class="pc-label">Panier moyen</div>
+      <div class="pc-sub">par transaction</div>
+    </div>
+    <div>
+      <div class="pc-val" id="v-panier">—</div>
+      <div class="pc-unit">FCFA</div>
+    </div>
+  </div>
+
+  <div class="tbl-card">
+    <div class="tbl-hd">Toutes les transactions</div>
+    <div id="ventesTable"></div>
+  </div>
+</div>
+
+<!-- ══ PAGE : STOCK ══ -->
+<div class="page" id="page-stock">
+  <h2 class="sec-title">Stock</h2>
+  <p class="sec-sub">Boutique · Collections</p>
+
+  <div class="kpi-grid">
+    <div class="kpi good">
+      <span class="kpi-label">Disponible</span>
+      <div class="kpi-value" id="s-dispo">—</div>
+      <div class="kpi-sub">stock > 2</div>
+    </div>
+    <div class="kpi warn">
+      <span class="kpi-label">Stock faible</span>
+      <div class="kpi-value" id="s-faible">—</div>
+      <div class="kpi-sub">≤ 2 pièces</div>
+    </div>
+    <div class="kpi danger">
+      <span class="kpi-label">Rupture</span>
+      <div class="kpi-value" id="s-rupture">—</div>
+      <div class="kpi-sub">stock = 0</div>
+    </div>
+    <div class="kpi info">
+      <span class="kpi-label">Total pièces</span>
+      <div class="kpi-value" id="s-total">—</div>
+      <div class="kpi-sub">en stock</div>
+    </div>
+  </div>
+
+  <div class="tbl-card">
+    <div class="tbl-hd">Détail par pièce</div>
+    <div id="stockTable"></div>
+  </div>
+</div>
+
+<!-- ══ PAGE : CLIENTES ══ -->
+<div class="page" id="page-clientes">
+  <h2 class="sec-title">Clientes</h2>
+  <p class="sec-sub">Base MY NUGO</p>
+
+  <div class="kpi-grid">
+    <div class="kpi" style="border-bottom:4px solid var(--black);">
+      <span class="kpi-label">Total</span>
+      <div class="kpi-value" id="c-total">—</div>
+      <div class="kpi-sub">dans la base</div>
+    </div>
+    <div class="kpi good">
+      <span class="kpi-label">Actives Q1</span>
+      <div class="kpi-value" id="c-actives">—</div>
+      <div class="kpi-sub">ont acheté</div>
+    </div>
+  </div>
+
+  <div class="tbl-card">
+    <div class="tbl-hd">Liste des clientes</div>
+    <div id="clientesTable"></div>
+  </div>
+</div>
+
+<!-- ══ PAGE : DETTES ══ -->
+<div class="page" id="page-dettes">
+  <h2 class="sec-title">Dettes</h2>
+  <p class="sec-sub">À recouvrer</p>
+
+  <div class="dette-hero">
+    <div class="dh-label">Total dettes clientes</div>
+    <div>
+      <span class="dh-value" id="d-total">—</span>
+      <span class="dh-unit">FCFA</span>
+    </div>
+    <div class="dh-row">
+      <div class="dh-stat">
+        <div class="dh-stat-val" id="d-nb">—</div>
+        <div class="dh-stat-lbl">Clientes concernées</div>
+      </div>
+      <div class="dh-stat">
+        <div class="dh-stat-val" id="d-moy">—</div>
+        <div class="dh-stat-lbl">Dette moyenne FCFA</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tbl-card">
+    <div class="tbl-hd">Détail par cliente — du plus élevé</div>
+    <div id="dettesTable"></div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<div class="bot-nav">
+  <div class="bot-tab active" onclick="goPage('home')">
+    <div class="bot-tab-icon">📊</div>
+    <div class="bot-tab-label">Accueil</div>
+  </div>
+  <div class="bot-tab" onclick="goPage('ventes')">
+    <div class="bot-tab-icon">💰</div>
+    <div class="bot-tab-label">Ventes</div>
+  </div>
+  <div class="bot-tab" onclick="goPage('stock')">
+    <div class="bot-tab-icon">📦</div>
+    <div class="bot-tab-label">Stock</div>
+  </div>
+  <div class="bot-tab" onclick="goPage('clientes')">
+    <div class="bot-tab-icon">👩🏾</div>
+    <div class="bot-tab-label">Clientes</div>
+  </div>
+  <div class="bot-tab" onclick="goPage('dettes')">
+    <div class="bot-tab-icon">⚠️</div>
+    <div class="bot-tab-label">Dettes</div>
+  </div>
+</div>
+
+<!-- ══ MAC BUTTON ══ -->
+<div class="mac-btn" id="macBtn" onclick="openMac()">
+  <div class="mac-btn-icon">🤖</div>
+  <div class="mac-btn-label">MAC</div>
+  <div class="mac-notif" id="macNotif"><span class="mac-notif-n" id="macNotifN">0</span></div>
+</div>
+
+<!-- ══ MAC PANEL ══ -->
+<div class="mac-overlay" id="macOverlay" onclick="closeMac()"></div>
+<div class="mac-panel" id="macPanel">
+  <div class="mac-hdr">
+    <div class="mac-hdr-top">
+      <div>
+        <div class="mac-name">MAC</div>
+        <div class="mac-status"><span class="mac-status-dot"></span>Assistant CEO · MY NUGO</div>
+      </div>
+      <button class="mac-close" onclick="closeMac()">✕</button>
+    </div>
+    <div class="mac-chips" id="macChips">
+      <div class="mac-chip" onclick="askMac('Quel est mon CA ce mois ?')">📈 Mon CA</div>
+      <div class="mac-chip" onclick="askMac('Quelles pièces sont en rupture ?')">📦 Stock</div>
+      <div class="mac-chip" onclick="askMac('Qui me doit de l\'argent ?')">⚠️ Dettes</div>
+      <div class="mac-chip" onclick="askMac('Quelles sont mes meilleures clientes ?')">👑 Top clientes</div>
+      <div class="mac-chip" onclick="askMac('Donne-moi un conseil stratégique pour ce mois')">💡 Stratégie</div>
+      <div class="mac-chip" onclick="askMac('Comment progresser vers mon objectif de 10M FCFA par mois ?')">🎯 Objectif 10M</div>
+      <div class="mac-chip" onclick="askMac('Que devrait faire Cecilia aujourd\'hui ?')">📋 Cecilia</div>
+    </div>
+  </div>
+  <div class="mac-messages" id="macMessages"></div>
+  <div class="mac-input-wrap">
+    <input class="mac-input" id="macInput" type="text" placeholder="Posez votre question à MAC..." onkeydown="if(event.key==='Enter')sendMac()"/>
+    <button class="mac-send" onclick="sendMac()">→</button>
+  </div>
+</div>
+
+<!-- ══ BACK TOP ══ -->
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+// ══ CONFIG ══
+var CFG = {
+  PWD: 'mynugo2026',
+  SHEET_ID: '16ckDwuJJ8lj6RxRfi058xxxeZxOcePIDVnsX2k7oQ4s',
+  BASE: 'https://sheets.googleapis.com/v4/spreadsheets',
+  OBJECTIF_ANNUEL: 120000000,
+  OBJECTIF_MENSUEL: 10000000
+};
+// La clé API Google est récupérée côté serveur via la Function
+var GKEY = null;
+
+var DATA = { V:[], S:[], C:[], D:[] };
+var MAC_HISTORY = [];
+var MAC_OPEN = false;
+
+// ══ LOGIN ══
+function login(){
+  if(document.getElementById('pwdInput').value === CFG.PWD){
+    document.getElementById('loginScreen').classList.add('out');
+    setTimeout(function(){
+      document.getElementById('loginScreen').style.display='none';
+      var ls = document.getElementById('loadingScreen');
+      ls.classList.add('show');
+      loadData();
+    },500);
+  } else {
+    var err = document.getElementById('loginErr');
+    err.style.display='block';
+    document.getElementById('pwdInput').style.borderColor='#ff4444';
+    setTimeout(function(){ err.style.display='none'; document.getElementById('pwdInput').style.borderColor='#222'; },3000);
+  }
+}
+
+// ══ FETCH SHEET ══
+function nk(h){
+  return (h||'').toString().toLowerCase()
+    .replace(/[éèê]/g,'e').replace(/[àâ]/g,'a').replace(/[ùûü]/g,'u')
+    .replace(/[îï]/g,'i').replace(/[ôö]/g,'o').replace(/ç/g,'c')
+    .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+}
+async function fetchSheet(name){
+  // Utiliser la clé récupérée ou passer par la function sheets
+  var key = GKEY || '';
+  var url=CFG.BASE+'/'+CFG.SHEET_ID+'/values/'+encodeURIComponent(name)+'?key='+key;
+  var r=await fetch(url);
+  if(!r.ok) throw new Error(name+':'+r.status);
+  var d=await r.json();
+  var rows=d.values||[];
+  if(rows.length<4) return [];
+  var hdrs=rows[2].map(nk);
+  return rows.slice(3).filter(function(row){
+    if(!row||!row.length) return false;
+    var f=(row[0]||'').toString().trim().toUpperCase();
+    return f!=='TOTAL'&&f!=='TOTAL DETTES'&&f!=='CLIENTS'&&row.some(function(c){ return c&&c.toString().trim()!==''; });
+  }).map(function(row){
+    var o={_raw:row};
+    hdrs.forEach(function(h,i){ if(h) o[h]=row[i]||''; });
+    return o;
+  });
+}
+function pn(v){ return parseFloat((v||'0').toString().replace(/[\s]/g,'').replace(',','.'))||0; }
+function fmt(n){ return Math.round(n).toLocaleString('fr-FR'); }
+function fmtK(n){ return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?Math.round(n/1000)+'k':fmt(n); }
+function pct(a,b){ if(!b) return ''; var p=(a-b)/b*100; return (p>=0?'+':'')+p.toFixed(1)+'%'; }
+function caM(mois){ return DATA.V.filter(function(r){ return r._mois.toLowerCase().indexOf(mois)>-1; }).reduce(function(s,r){ return s+r._montant; },0); }
+
+// ══ LOAD DATA ══
+async function loadData(){
+  var rb=document.getElementById('refreshBtn');
+  rb.classList.add('spin');
+  try{
+    // Récupérer la clé Google depuis le serveur
+    if(!GKEY){
+      var kr = await fetch('/.netlify/functions/config');
+      var kd = await kr.json();
+      GKEY = kd.gkey || '';
+    }
+    var ventes=await fetchSheet('VENTES');
+    var stock=await fetchSheet('STOCK');
+    var clients=await fetchSheet('CLIENTS');
+    var dettes=await fetchSheet('DETTES_CLIENTS');
+
+    DATA.V=ventes.map(function(r){
+      return {
+        date:r.date||r._raw[0]||'',
+        _mois:(r.mois||r._raw[1]||'').toString(),
+        _client:(r.client||r._raw[2]||'').toString().trim()||'Non attribué',
+        _libelle:r.libelle_produit||r._raw[3]||'',
+        _montant:pn(r.montant_fcfa||r._raw[4])
+      };
+    }).filter(function(r){ return r._montant>0; });
+
+    DATA.S=stock.map(function(r){
+      return {
+        collection:r.collection||r._raw[0]||'',
+        nom:r.nom_piece||r._raw[1]||'',
+        couleur:r.couleur||r._raw[3]||'',
+        quantite:pn(r.quantite||r._raw[4]),
+        prix:pn(r.prix_fcfa||r._raw[5])
+      };
+    }).filter(function(r){ return r.nom&&r.nom!==''; });
+
+    DATA.C=clients.filter(function(r){
+      var n=(r.nom_cliente||r._raw[0]||'').toString().trim().toUpperCase();
+      return n&&n!=='CLIENTS'&&n!=='NOM CLIENTE';
+    }).map(function(r){
+      return {
+        nom:r.nom_cliente||r._raw[0]||'',
+        contact:r.contact_telephone_||r._raw[1]||'',
+        pays:(r.pays___ville||r._raw[2]||'').replace(/côte d.ivoire/i,'🇨🇮')
+      };
+    });
+
+    DATA.D=dettes.filter(function(r){
+      return (r._raw[0]||'').toString().trim()!=='';
+    }).map(function(r){
+      return {
+        client:r.cliente___contact||r._raw[0]||'—',
+        libelle:r.libelle||r._raw[1]||'',
+        montant:pn(r.montant_du_fcfa_||r._raw[2])
+      };
+    });
+
+    var now=new Date();
+    document.getElementById('hdrTime').textContent=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('dateSub').textContent=now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+    var ls=document.getElementById('loadingScreen');
+    ls.classList.add('out');
+    setTimeout(function(){ ls.classList.remove('show','out'); },400);
+
+    renderAll();
+    checkAlertsForMac();
+
+  } catch(e){
+    console.error(e);
+    document.getElementById('hdrTime').textContent='⚠ Erreur';
+    document.getElementById('loadingScreen').classList.remove('show');
+  }
+  rb.classList.remove('spin');
+}
+
+// ══ RENDER ALL ══
+function renderAll(){
+  renderHome();
+  renderVentes();
+  renderStock();
+  renderClientes();
+  renderDettes();
+}
+
+// ── HOME ──
+function renderHome(){
+  var jan=caM('janvier'),fev=caM('f'),mar=caM('mars');
+  var total=jan+fev+mar,nb=DATA.V.length;
+  var panier=nb?Math.round(total/nb):0;
+  var actives=new Set(DATA.V.filter(function(r){ return r._client!=='Non attribué'; }).map(function(r){ return r._client; })).size;
+  var stockAlert=DATA.S.filter(function(r){ return r.quantite<=2; }).length;
+  var stockDispo=DATA.S.filter(function(r){ return r.quantite>2; }).length;
+  var totalD=DATA.D.reduce(function(s,r){ return s+r.montant; },0);
+
+  document.getElementById('hk-ca').textContent=fmt(total);
+  document.getElementById('hk-nb').textContent=nb;
+  document.getElementById('hk-panier').textContent=fmtK(panier);
+  document.getElementById('hk-clientes').textContent=actives;
+  document.getElementById('g-stock-alert').textContent=stockAlert;
+  document.getElementById('g-dettes-k').textContent=fmtK(totalD);
+  document.getElementById('g-stock-dispo').textContent=stockDispo;
+  document.getElementById('g-nb-cli').textContent=DATA.C.length;
+
+  // Objectif
+  var objPct=Math.min(Math.round(total/CFG.OBJECTIF_ANNUEL*100),100);
+  document.getElementById('obj-pct').textContent=objPct+'%';
+  setTimeout(function(){ document.getElementById('obj-fill').style.width=objPct+'%'; },300);
+
+  // Alertes
+  var az='';
+  if(stockAlert>0) az+='<div class="alert warn"><div class="alert-icon">📦</div><div><div class="alert-text">'+stockAlert+' pièce(s) en stock faible ou rupture</div><div class="alert-sub">Prévenez Cecilia pour le réassort</div></div></div>';
+  if(totalD>0) az+='<div class="alert danger"><div class="alert-icon">⚠️</div><div><div class="alert-text">'+fmt(totalD)+' FCFA de dettes à recouvrer</div><div class="alert-sub">'+DATA.D.length+' clientes concernées</div></div></div>';
+  document.getElementById('alertsZone').innerHTML=az;
+
+  // Barres
+  var maxCA=Math.max(jan,fev,mar,1),H=90;
+  document.getElementById('bv-jan').textContent=fmtK(jan);
+  document.getElementById('bv-fev').textContent=fmtK(fev);
+  document.getElementById('bv-mar').textContent=fmtK(mar);
+  document.getElementById('be-jan').textContent='Base';
+  document.getElementById('be-jan').className='bar-evo';
+  var fevE=pct(fev,jan);
+  document.getElementById('be-fev').textContent=fevE;
+  document.getElementById('be-fev').className='bar-evo '+(fev>=jan?'up':'down');
+  var marE=pct(mar,fev);
+  document.getElementById('be-mar').textContent=marE;
+  document.getElementById('be-mar').className='bar-evo '+(mar>=fev?'up':'down');
+  setTimeout(function(){
+    document.getElementById('b-jan').style.height=(jan/maxCA*H)+'px';
+    document.getElementById('b-fev').style.height=(fev/maxCA*H)+'px';
+    document.getElementById('b-mar').style.height=(mar/maxCA*H)+'px';
+  },200);
+
+  // Top clientes
+  var byC={};
+  DATA.V.forEach(function(r){ var k=r._client; byC[k]=(byC[k]||0)+r._montant; });
+  var sorted=Object.entries(byC).sort(function(a,b){ return b[1]-a[1]; }).slice(0,7);
+  var maxV=sorted.length?sorted[0][1]:1;
+  var html='';
+  sorted.forEach(function(e,i){
+    var isNA=e[0]==='Non attribué';
+    var cls=i===0?'r1':i===1?'r2':'rn';
+    html+='<div class="prog-item">';
+    html+='<span class="prog-rank">'+(i+1)+'</span>';
+    html+='<span class="prog-name" style="'+(isNA?'color:var(--g300);font-style:italic;':'')+'">'+e[0]+'</span>';
+    html+='<div class="prog-bar-bg"><div class="prog-fill '+cls+'" style="width:'+(e[1]/maxV*100)+'%;'+(isNA?'background:var(--g200);':'')+'"></div></div>';
+    html+='<span class="prog-val" style="'+(isNA?'color:var(--g300);':'')+'">'+fmt(e[1])+'</span>';
+    html+='</div>';
+  });
+  document.getElementById('topClients').innerHTML=html;
+}
+
+// ── VENTES ──
+function renderVentes(){
+  var jan=caM('janvier'),fev=caM('f'),mar=caM('mars');
+  var total=jan+fev+mar,nb=DATA.V.length;
+  document.getElementById('v-jan').textContent=fmtK(jan);
+  document.getElementById('v-fev').textContent=fmtK(fev);
+  document.getElementById('v-mar').textContent=fmtK(mar);
+  document.getElementById('v-jan-e').textContent='Base Q1';
+  document.getElementById('v-jan-e').className='mois-evo';
+  var fe=pct(fev,jan);
+  document.getElementById('v-fev-e').textContent=fe;
+  document.getElementById('v-fev-e').className='mois-evo '+(fev>=jan?'up':'dn');
+  var me=pct(mar,fev);
+  document.getElementById('v-mar-e').textContent=me;
+  document.getElementById('v-mar-e').className='mois-evo '+(mar>=fev?'up':'dn');
+  document.getElementById('v-panier').textContent=nb?fmt(Math.round(total/nb)):'—';
+  var html='';
+  DATA.V.slice().reverse().forEach(function(r){
+    var isNA=r._client==='Non attribué';
+    html+='<div class="tbl-row"><div style="flex:1;"><div class="tc bold" style="'+(isNA?'color:var(--g400);':'')+'">'+r._client+'</div><div class="tc small">'+r._mois.replace(' 2026','')+(r._libelle?' · '+r._libelle.substring(0,30)+(r._libelle.length>30?'…':''):'')+'</div></div><div class="tc money" style="flex-shrink:0;text-align:right;">'+fmt(r._montant)+'</div></div>';
+  });
+  document.getElementById('ventesTable').innerHTML=html||'<div class="tbl-row"><span class="tc muted">Aucune donnée</span></div>';
+}
+
+// ── STOCK ──
+function renderStock(){
+  var dispo=0,faible=0,rupture=0,totalQ=0;
+  DATA.S.forEach(function(r){ var q=r.quantite; totalQ+=q; if(q===0)rupture++; else if(q<=2)faible++; else dispo++; });
+  document.getElementById('s-dispo').textContent=dispo;
+  document.getElementById('s-faible').textContent=faible;
+  document.getElementById('s-rupture').textContent=rupture;
+  document.getElementById('s-total').textContent=totalQ;
+  var html='';
+  DATA.S.forEach(function(r){
+    var q=r.quantite;
+    var cls=q===0?'rupture':q<=2?'faible':'dispo';
+    var lbl=q===0?'Rupture':q<=2?'Faible':'Dispo';
+    html+='<div class="tbl-row"><div style="flex:1;"><div class="tc bold">'+r.nom+'</div><div class="tc small">'+r.collection+(r.couleur?' · '+r.couleur:'')+'</div></div><div class="tc bold" style="width:32px;text-align:center;font-size:18px;flex-shrink:0;">'+q+'</div><span class="badge '+cls+'">'+lbl+'</span></div>';
+  });
+  document.getElementById('stockTable').innerHTML=html||'<div class="tbl-row"><span class="tc muted">Aucune donnée</span></div>';
+}
+
+// ── CLIENTES ──
+function renderClientes(){
+  var actives=new Set(DATA.V.filter(function(r){ return r._client!=='Non attribué'; }).map(function(r){ return r._client; })).size;
+  document.getElementById('c-total').textContent=DATA.C.length;
+  document.getElementById('c-actives').textContent=actives;
+  var html='';
+  DATA.C.forEach(function(r){
+    html+='<div class="tbl-row"><div style="flex:1;"><div class="tc bold">'+r.nom+'</div>'+(r.contact?'<div class="tc small">'+r.contact+'</div>':'')+'</div><div class="tc muted" style="flex-shrink:0;">'+r.pays+'</div></div>';
+  });
+  document.getElementById('clientesTable').innerHTML=html||'<div class="tbl-row"><span class="tc muted">Aucune donnée</span></div>';
+}
+
+// ── DETTES ──
+function renderDettes(){
+  var totalD=DATA.D.reduce(function(s,r){ return s+r.montant; },0);
+  var nb=DATA.D.length;
+  document.getElementById('d-total').textContent=fmt(totalD);
+  document.getElementById('d-nb').textContent=nb;
+  document.getElementById('d-moy').textContent=nb?fmt(Math.round(totalD/nb)):'—';
+  var sorted=DATA.D.slice().sort(function(a,b){ return b.montant-a.montant; });
+  var html='';
+  sorted.forEach(function(r){
+    html+='<div class="tbl-row"><div style="flex:1;"><div class="tc bold">'+r.client+'</div>'+(r.libelle?'<div class="tc small">'+r.libelle+'</div>':'')+'</div><div class="tc red money" style="flex-shrink:0;text-align:right;">'+fmt(r.montant)+'</div></div>';
+  });
+  document.getElementById('dettesTable').innerHTML=html||'<div class="tbl-row"><span class="tc muted">Aucune dette</span></div>';
+}
+
+// ══ NAVIGATION ══
+function goPage(n){
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.bot-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('page-'+n).classList.add('active');
+  var pages=['home','ventes','stock','clientes','dettes'];
+  document.querySelectorAll('.bot-tab')[pages.indexOf(n)].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══ MAC CHATBOT ══
+function openMac(){
+  MAC_OPEN=true;
+  document.getElementById('macOverlay').classList.add('show');
+  document.getElementById('macPanel').classList.add('show');
+  document.getElementById('macNotif').classList.remove('show');
+  if(MAC_HISTORY.length===0) macGreet();
+}
+function closeMac(){
+  MAC_OPEN=false;
+  document.getElementById('macOverlay').classList.remove('show');
+  document.getElementById('macPanel').classList.remove('show');
+}
+
+function macGreet(){
+  var jan=caM('janvier'),fev=caM('f'),mar=caM('mars');
+  var total=jan+fev+mar;
+  var ruptures=DATA.S.filter(function(r){ return r.quantite===0; }).length;
+  var totalD=DATA.D.reduce(function(s,r){ return s+r.montant; },0);
+  var heure=new Date().getHours();
+  var salut=heure<12?'Bonjour':heure<18?'Bon après-midi':'Bonsoir';
+
+  var msg=salut+' Manou ✨\n\nVotre Q1 2026 : '+fmt(total)+' FCFA — vous construisez sur du solide.\n\n';
+  if(ruptures>0) msg+='📦 '+ruptures+' pièce(s) en rupture — à signaler à Cecilia.\n';
+  if(totalD>0) msg+='⚠️ '+fmt(totalD)+' FCFA de dettes en cours.\n';
+  msg+='\nVotre objectif : 10M FCFA/mois. On y travaille ensemble. Par où voulez-vous commencer ?';
+
+  addMacMsg('mac', msg);
+}
+
+function addMacMsg(role, text){
+  var msgs=document.getElementById('macMessages');
+  var now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  var div=document.createElement('div');
+  div.className='mac-msg '+role;
+  div.innerHTML='<div class="mac-bubble">'+text.replace(/\n/g,'<br>')+'</div><div class="mac-time">'+now+'</div>';
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  if(role==='mac') MAC_HISTORY.push({role:'assistant',content:text});
+  else MAC_HISTORY.push({role:'user',content:text});
+}
+
+function showTyping(){
+  var msgs=document.getElementById('macMessages');
+  var div=document.createElement('div');
+  div.className='mac-msg mac mac-typing';
+  div.id='macTyping';
+  div.innerHTML='<div class="mac-bubble"><div class="mac-typing-dots"><div class="mac-typing-dot"></div><div class="mac-typing-dot"></div><div class="mac-typing-dot"></div></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function hideTyping(){ var t=document.getElementById('macTyping'); if(t) t.remove(); }
+
+function askMac(q){
+  document.getElementById('macInput').value=q;
+  sendMac();
+}
+
+async function sendMac(){
+  var input=document.getElementById('macInput');
+  var q=input.value.trim();
+  if(!q) return;
+  input.value='';
+  addMacMsg('user',q);
+  showTyping();
+
+  // Construire le contexte des données
+  var jan=caM('janvier'),fev=caM('f'),mar=caM('mars');
+  var total=jan+fev+mar,nb=DATA.V.length;
+  var panier=nb?Math.round(total/nb):0;
+  var ruptures=DATA.S.filter(function(r){ return r.quantite===0; });
+  var faibles=DATA.S.filter(function(r){ return r.quantite>0&&r.quantite<=2; });
+  var totalD=DATA.D.reduce(function(s,r){ return s+r.montant; },0);
+
+  // Top clientes
+  var byC={};
+  DATA.V.forEach(function(r){ if(r._client!=='Non attribué') byC[r._client]=(byC[r._client]||0)+r._montant; });
+  var topC=Object.entries(byC).sort(function(a,b){ return b[1]-a[1]; }).slice(0,3).map(function(e){ return e[0]+' ('+fmt(e[1])+' FCFA)'; }).join(', ');
+
+  var contexte='DONNÉES MY NUGO EN TEMPS RÉEL :\n'+
+    '— CA Janvier 2026 : '+fmt(jan)+' FCFA\n'+
+    '— CA Février 2026 : '+fmt(fev)+' FCFA\n'+
+    '— CA Mars 2026 : '+fmt(mar)+' FCFA\n'+
+    '— CA Total Q1 2026 : '+fmt(total)+' FCFA\n'+
+    '— Nb transactions Q1 : '+nb+'\n'+
+    '— Panier moyen : '+fmt(panier)+' FCFA\n'+
+    '— Stock dispo (>2) : '+DATA.S.filter(function(r){ return r.quantite>2; }).length+' pièces\n'+
+    '— Stock faible (≤2) : '+faibles.length+' pièces\n'+
+    '— Ruptures : '+ruptures.length+' pièces\n'+
+    '— Dettes totales : '+fmt(totalD)+' FCFA ('+DATA.D.length+' clientes)\n'+
+    '— Base clientes : '+DATA.C.length+'\n'+
+    '— Top clientes : '+topC+'\n'+
+    (ruptures.length?'— Pièces en rupture : '+ruptures.map(function(r){ return r.nom; }).join(', ')+'\n':'')+
+    (faibles.length?'— Pièces stock faible : '+faibles.map(function(r){ return r.nom+' ('+r.quantite+')'; }).join(', ')+'\n':'')+
+    '\nOBJECTIFS MY NUGO :\n'+
+    '— Objectif mensuel : 10 000 000 FCFA (3 départements)\n'+
+    '— Vêtements : 5M FCFA/mois (120 tenues)\n'+
+    '— Podcast & Média : 3M FCFA/mois\n'+
+    '— Lounge & Bien-être : 2M FCFA/mois\n'+
+    '\nCANAUX DE VENTE PRÉVUS :\n'+
+    '— TikTok Shop + Live 2x/semaine (40% des ventes)\n'+
+    '— Micro-influenceuses 5K-20K abonnés (30%)\n'+
+    '— WhatsApp VIP + réseau personnel (30%)\n'+
+    '\nSTRATÉGIES PROMOTIONNELLES :\n'+
+    '— Mercredi des Jeux : 1 tenue offerte = 20 nouveaux contacts\n'+
+    '— Jeudi Flash : -20% sur 10-15 pièces max\n'+
+    '— Vendredi Bonus : achat >35K = accessoire offert\n'+
+    '\nÉQUIPE :\n'+
+    '— Manou (Maimounata) : Fondatrice & CEO\n'+
+    '— Cecilia : Assistante au siège à Abidjan\n'+
+    '— Nugo Biman : Programme RSE, alumna Programme AWF/Fondation SEPHIS\n'+
+    '\nPRÉSENCE DIGITALE :\n'+
+    '— Instagram : @nugo_by_ekd\n'+
+    '— TikTok : @nugobyekd\n'+
+    '— LinkedIn : posts quotidiens (charisme naturel fort)\n'+
+    '— Apprend la vidéo pour créer du contenu autonome\n'+
+    '\nUPSELLS MR ATTRACTOR DISPONIBLES :\n'+
+    '— Stratégie TikTok Shop + Live Shopping\n'+
+    '— Production Podcast MY NUGO\n'+
+    '— Stratégie événementielle Lounge\n'+
+    '— Coaching personal branding + vidéo\n'+
+    '— Campagnes Facebook/Instagram Ads\n'+
+    '— Formation équipe commerciale\n';
+
+  var systemPrompt='Tu es MAC, l\'assistant personnel et coach business de Maimounata Kouma Epse Effi, fondatrice de MY NUGO, marque de mode africaine contemporaine basée à Abidjan, Côte d\'Ivoire.\n\n'+
+    'TON RÔLE :\n'+
+    '— Coach business bienveillant et direct\n'+
+    '— Tu analyses les données réelles de MY NUGO fournies dans chaque message\n'+
+    '— Tu aides Manou à prendre des décisions stratégiques chiffrées\n'+
+    '— Tu détectes progressivement sa personnalité et adaptes ton ton\n'+
+    '— Tu es proactif : tu signales les opportunités et les risques\n'+
+    '— Tu mémorises les échanges de cette session\n\n'+
+    'PERSONNALITÉ DE MANOU :\n'+
+    '— Femme de caractère, battante, résiliente (cancer 2015, rémission 2018)\n'+
+    '— MY NUGO née en 2017 en pleine lutte — "RÉSISTER · CRÉER · INSPIRER"\n'+
+    '— Charisme naturel fort (LinkedIn, vidéo en cours)\n'+
+    '— En apprentissage de la structure business\n'+
+    '— Visionnaire — pense grand, pense croissance\n'+
+    '— Sensible à l\'engagement social (Nugo Biman)\n\n'+
+    'RÈGLES DE COMMUNICATION :\n'+
+    '— Toujours en français\n'+
+    '— Chaleureux mais concis — jamais condescendant\n'+
+    '— Chiffres précis quand tu as les données\n'+
+    '— Emojis utilisés avec intention (pas décoratifs)\n'+
+    '— Tu peux recommander les services de Mr Attractor quand c\'est pertinent et naturel\n'+
+    '— Tu encourages ses projets LinkedIn et vidéo avec des conseils concrets\n'+
+    '— Tu rappelles ses forces quand elle doute\n'+
+    '— Réponses courtes sur mobile — max 150 mots sauf si analyse demandée\n\n'+
+    'DONNÉES ACTUELLES :\n'+contexte;
+
+  try{
+    var messages=MAC_HISTORY.filter(function(m){ return m.role==='user'||m.role==='assistant'; }).slice(-8);
+    messages.push({role:'user',content:q});
+
+    var resp=await fetch('/.netlify/functions/mac',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        system:systemPrompt,
+        messages:messages
+      })
+    });
+    var respText = await resp.text();
+    console.log('MAC réponse status:', resp.status, respText.substring(0,100));
+    hideTyping();
+    if(!resp.ok){
+      addMacMsg('mac','⚠️ Erreur serveur ('+resp.status+'). Contactez Mr Attractor si le problème persiste.');
+      return;
+    }
+    var data = JSON.parse(respText);
+    var txt = data.content&&data.content[0]?data.content[0].text:'Je rencontre une difficulté. Réessayez.';
+    addMacMsg('mac',txt);
+  } catch(e){
+    hideTyping();
+    console.error('MAC erreur:', e);
+    addMacMsg('mac','⚠️ Erreur : '+e.message+'. Vérifiez votre connexion.');
+  }
+}
+
+// ══ ALERTES POUR MAC ══
+function checkAlertsForMac(){
+  var nb=0;
+  var ruptures=DATA.S.filter(function(r){ return r.quantite===0; }).length;
+  var totalD=DATA.D.reduce(function(s,r){ return s+r.montant; },0);
+  if(ruptures>0) nb++;
+  if(totalD>500000) nb++;
+  if(nb>0){
+    document.getElementById('macNotif').classList.add('show');
+    document.getElementById('macNotifN').textContent=nb;
+  }
+}
+
+// ══ SCROLL ══
+window.addEventListener('scroll',function(){
+  document.getElementById('backTop').classList.toggle('vis',window.scrollY>200);
+});
+
+// ══ HORLOGE ══
+setInterval(function(){
+  var el=document.getElementById('hdrTime');
+  if(el&&el.textContent!=='—'&&el.textContent.indexOf('⚠')===-1){
+    el.textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  }
+},30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "mynugo-dashboard",
+  "version": "1.0.0",
+  "description": "MY NUGO Dashboard CEO avec MAC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
